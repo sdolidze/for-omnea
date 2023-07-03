@@ -1,9 +1,16 @@
-import { Box, Button } from "@mui/material";
+import { Button, Container, TextField } from "@mui/material";
 import { gql, useQuery } from "@apollo/client";
+import * as React from "react";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import Divider from "@mui/material/Divider";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import DescriptionIcon from "@mui/icons-material/Description";
 
 const NOTE_LIST = gql`
   query NoteList {
-    notes(limit: 5) {
+    notes {
       id
       text
       updated_at
@@ -33,16 +40,28 @@ function App() {
   }
 
   return (
-    <Box>
-      <Button variant="contained">Hello</Button>
-      {data.notes.map(note => (
-        <div key={note.id}>
-          <p>{note.id}</p>
-          <p>{note.text}</p>
-          <p>{note.updated_at}</p>
-        </div>
-      ))}
-    </Box>
+    <Container>
+      <List>
+        {data.notes.map(note => (
+          <React.Fragment key={note.id}>
+            <ListItem alignItems="flex-start">
+              <ListItemIcon>
+                <DescriptionIcon />
+              </ListItemIcon>
+              <ListItemText primary={note.text} />
+            </ListItem>
+            <Divider variant="inset" component="li" />
+          </React.Fragment>
+        ))}
+
+        <ListItem sx={{ mt: 2 }}>
+          <TextField sx={{ flex: 1, mr: 1 }} label="Note" variant="outlined" />
+          <Button size="large" variant="contained">
+            Add
+          </Button>
+        </ListItem>
+      </List>
+    </Container>
   );
 }
 

@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
-import { CssBaseline } from "@mui/material";
+import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 
 import "@fontsource/roboto/300.css";
@@ -16,14 +16,22 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
+
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 
 root.render(
   <React.StrictMode>
-    <CssBaseline />
-    <ApolloProvider client={client}>
-      <App />
-    </ApolloProvider>
+    <ThemeProvider theme={darkTheme}>
+      <ApolloProvider client={client}>
+        <CssBaseline />
+        <App />
+      </ApolloProvider>
+    </ThemeProvider>
   </React.StrictMode>,
 );
 
