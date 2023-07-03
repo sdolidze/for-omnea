@@ -1,66 +1,39 @@
-import { Button, Container, TextField } from "@mui/material";
-import { gql, useQuery } from "@apollo/client";
-import * as React from "react";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import Divider from "@mui/material/Divider";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import DescriptionIcon from "@mui/icons-material/Description";
-
-const NOTE_LIST = gql`
-  query NoteList {
-    notes {
-      id
-      text
-      updated_at
-    }
-  }
-`;
-
-interface Note {
-  id: number;
-  text: string;
-  updated_at: string;
-}
+import { useQuery } from "@apollo/client";
+import { Note } from "./types";
+import { NOTE_LIST_QUERY } from "./graphql";
+import NoteList from "./NoteList";
+import { Container } from "@mui/material";
 
 function App() {
-  const { loading, error, data } = useQuery<{ notes: Note[] }>(NOTE_LIST);
+  const { loading, error, data } = useQuery<{ notes: Note[] }>(NOTE_LIST_QUERY);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <Container>
+        <p>Loading...</p>
+      </Container>
+    );
   }
 
   if (error) {
-    return <p>Error: {error.message}</p>;
+    return (
+      <Container>
+        <p>Error: {error.message}</p>
+      </Container>
+    );
   }
 
   if (data === undefined) {
-    return <p>Missing data</p>;
+    return (
+      <Container>
+        <p>Missing data</p>
+      </Container>
+    );
   }
 
   return (
     <Container>
-      <List>
-        {data.notes.map(note => (
-          <React.Fragment key={note.id}>
-            <ListItem alignItems="flex-start">
-              <ListItemIcon>
-                <DescriptionIcon />
-              </ListItemIcon>
-              <ListItemText primary={note.text} />
-            </ListItem>
-            <Divider variant="inset" component="li" />
-          </React.Fragment>
-        ))}
-
-        <ListItem sx={{ mt: 2 }}>
-          <TextField sx={{ flex: 1, mr: 1 }} label="Note" variant="outlined" />
-          <Button size="large" variant="contained">
-            Add
-          </Button>
-        </ListItem>
-      </List>
+      <NoteList notes={data.notes} />
     </Container>
   );
 }
