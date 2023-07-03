@@ -9,3 +9,16 @@ export const NOTE_LIST_QUERY = gql`
     }
   }
 `;
+
+export const NOTE_INSERT_MUTATION = gql`
+  mutation NoteInsert($objects: [notes_insert_input!]!) {
+    insert_notes(objects: $objects) {
+      returning {
+        id
+        text
+        created_at
+        updated_at
+      }
+    }
+  }
+`;

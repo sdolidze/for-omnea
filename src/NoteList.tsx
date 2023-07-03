@@ -10,10 +10,13 @@ import { Note } from "./types";
 
 export interface NoteListProps {
   notes: Note[];
+  onAdd: (text: string) => void;
 }
 
 function NoteList(props: NoteListProps) {
-  const { notes } = props;
+  const { notes, onAdd } = props;
+
+  const textRef = React.useRef<HTMLInputElement | null>(null);
 
   return (
     <List>
@@ -29,12 +32,21 @@ function NoteList(props: NoteListProps) {
         </React.Fragment>
       ))}
 
-      <ListItem sx={{ mt: 2 }}>
-        <TextField sx={{ flex: 1, mr: 1 }} label="Note" variant="outlined" />
-        <Button size="large" variant="contained">
-          Add
-        </Button>
-      </ListItem>
+      <form
+        onSubmit={e => {
+          e.preventDefault();
+          const text = textRef.current!.value;
+          textRef.current!.value = "";
+          onAdd(text);
+        }}
+      >
+        <ListItem sx={{ mt: 2 }}>
+          <TextField inputRef={textRef} sx={{ flex: 1, mr: 1 }} label="Note" variant="outlined" />
+          <Button type="submit" size="large" variant="contained">
+            Add
+          </Button>
+        </ListItem>
+      </form>
     </List>
   );
 }
