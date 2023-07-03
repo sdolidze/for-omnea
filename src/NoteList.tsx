@@ -16,7 +16,9 @@ export interface NoteListProps {
 function NoteList(props: NoteListProps) {
   const { notes, onAdd } = props;
 
-  const textRef = React.useRef<HTMLInputElement | null>(null);
+  const [text, setText] = React.useState("");
+
+  const error = text.length > 180;
 
   return (
     <List>
@@ -26,7 +28,7 @@ function NoteList(props: NoteListProps) {
             <ListItemIcon>
               <DescriptionIcon />
             </ListItemIcon>
-            <ListItemText primary={note.text} />
+            <ListItemText sx={{ wordWrap: "break-word" }} primary={note.text} />
           </ListItem>
           <Divider variant="inset" component="li" />
         </React.Fragment>
@@ -35,13 +37,26 @@ function NoteList(props: NoteListProps) {
       <form
         onSubmit={e => {
           e.preventDefault();
-          const text = textRef.current!.value;
-          textRef.current!.value = "";
+
+          if (error) {
+            return;
+          }
+
           onAdd(text);
+          setText("");
         }}
       >
         <ListItem sx={{ mt: 2 }}>
-          <TextField inputRef={textRef} sx={{ flex: 1, mr: 1 }} label="Note" variant="outlined" />
+          <TextField
+            value={text}
+            onChange={e => setText(e.target.value)}
+            sx={{ flex: 1, mr: 1 }}
+            type="text"
+            label="Note"
+            variant="outlined"
+            error={error}
+            helperText={error && "Max length is 180 characters"}
+          />
           <Button type="submit" size="large" variant="contained">
             Add
           </Button>

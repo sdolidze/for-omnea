@@ -7,6 +7,7 @@ import { Container } from "@mui/material";
 function NoteContainer() {
   const { loading, error, data } = useQuery<{ notes: Note[] }>(NOTE_LIST_QUERY);
 
+  // TODO: add better error handling in the future
   const [insertNote] = useMutation(NOTE_INSERT_MUTATION);
 
   const handleAdd = (text: string) => {
